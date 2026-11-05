@@ -44,7 +44,8 @@ Requirements: R (tested with R 4.3.3), `dplyr` (1.1.4) and `ggplot2` (3.4.4). Th
 
 ```r
 install.packages(c("dplyr", "ggplot2"))
-source("forecast.R")   # run from the repository folder; takes about 30 seconds
+source("forecast.R")             # run from the repository folder; takes about 30 seconds
+source("paper/make_figures.R")   # the other figures of the report (optional)
 ```
 
 By default (`DOWNLOAD <- FALSE`) the script reads `data/hicp_data.csv`, the data used in the report, so it reproduces the numbers above exactly. With `DOWNLOAD <- TRUE` it downloads the latest data from Eurostat, and the results will change as new months are added or past data are revised.
@@ -59,7 +60,8 @@ Eurostat, dataset `prc_hicp_minr`: euro area (changing composition), all-items H
 forecast.R          the whole analysis: data, models, selection rule, evaluation, forecast
 data/               the data used in the report
 output/             tables (.csv) and figures (.png) produced by forecast.R
-paper/              the report (PDF and LaTeX source); it also uses three figures from output/
+paper/              the report (PDF and LaTeX source), make_figures.R and the figures it
+                    produces; the report also uses three figures from output/
 ```
 
 The script has seven parts: settings, data, exploration (ACF/PACF and seasonality), models and the selection rule, out-of-sample evaluation, the final forecast with intervals, residual diagnostics, and robustness checks.

@@ -379,6 +379,7 @@ ggsave("output/forecast_fan.png", g_fc, width = 8, height = 4.5, dpi = 300, bg =
 res   <- residuals(final_fit$fit)
 r_acf <- acf(res, lag.max = 36, plot = FALSE)$acf[-1]
 bp    <- box_pierce(res)
+write.csv(data.frame(residual = res), "output/residuals_final_model.csv", row.names = FALSE)   # used by paper/make_figures.R
 cat("\nFinal model residuals | autocorrelation lag 1:", round(r_acf[1], 3),
     "| lag 12:", round(r_acf[12], 3), "| lag 24:", round(r_acf[24], 3),
     "| 95% band: +/-", round(1.96 / sqrt(length(res)), 3),
