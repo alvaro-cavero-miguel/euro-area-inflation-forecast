@@ -5,7 +5,7 @@
 #
 # Steps:
 #   1. Data (Eurostat, prc_hicp_minr): annual rate + price index
-#   2. Exploration: ACF / PACF, monthly seasonality and its change in 2011
+#   2. Exploration: ACF / PACF and the change in the seasonal pattern in 2011
 #   3. Models and the model selection rule (Box-Pierce + BIC)
 #   4. Out-of-sample comparison (RMSPE, recursive window, 2015 - present)
 #   5. Final model: selection table, parameters, 12-month forecast, 50% / 90% intervals
@@ -76,16 +76,7 @@ acf(data$mm,   lag.max = 36, main = "ACF: monthly change")
 pacf(data$mm,  lag.max = 36, main = "PACF: monthly change")
 invisible(dev.off())
 
-# (b) Seasonality: monthly change by calendar month (lecture 4)
-g_season <- ggplot(data, aes(month, mm)) +
-  geom_boxplot(fill = "grey90", outlier.size = 0.8) +
-  labs(title = "Month-on-month HICP change by calendar month",
-       x = "Month", y = "Percent (log change)",
-       caption = "Source: Eurostat (prc_hicp_minr); author's calculations") +
-  theme_minimal(base_size = 12)
-ggsave("output/seasonality_mm.png", g_season, width = 8, height = 4.5, dpi = 300)
-
-# (c) Did the seasonal pattern change in 2011? (lecture 11: do not mix regimes)
+# (b) Did the seasonal pattern change in 2011? (lecture 11: do not mix regimes)
 season_tab <- data %>% group_by(month, period) %>% summarise(mean_mm = mean(mm), .groups = "drop")
 g_break <- ggplot(season_tab, aes(month, mean_mm, fill = period)) +
   geom_col(position = "dodge") +
@@ -94,7 +85,7 @@ g_break <- ggplot(season_tab, aes(month, mean_mm, fill = period)) +
        x = "Month", y = "Percent (log change)", fill = NULL,
        caption = "Source: Eurostat (prc_hicp_minr); author's calculations") +
   theme_minimal(base_size = 12) + theme(legend.position = "top")
-ggsave("output/seasonality_by_period.png", g_break, width = 8, height = 4.5, dpi = 300)
+ggsave("output/seasonality_by_period.png", g_break, width = 8, height = 4.5, dpi = 300, bg = "white")
 
 # ---------------------------------------------------------------------
 # 3. Models
@@ -378,7 +369,7 @@ g_fc <- ggplot() +
        x = NULL, y = "Percent, annual rate",
        caption = "Source: Eurostat (prc_hicp_minr); author's forecasts. Dashed line: sample mean.") +
   theme_minimal(base_size = 12)
-ggsave("output/forecast_fan.png", g_fc, width = 8, height = 4.5, dpi = 300)
+ggsave("output/forecast_fan.png", g_fc, width = 8, height = 4.5, dpi = 300, bg = "white")
 
 # ---------------------------------------------------------------------
 # 6. Diagnostics of the final model (Box-Jenkins step 3, lecture 9)
@@ -393,9 +384,6 @@ cat("\nFinal model residuals | autocorrelation lag 1:", round(r_acf[1], 3),
     "| 95% band: +/-", round(1.96 / sqrt(length(res)), 3),
     "\n   Box-Pierce Q(", bp[["R"]], ") =", round(bp[["Q"]], 1),
     "| 5% critical value =", round(bp[["crit"]], 1), "\n")
-png("output/residual_acf_final_model.png", width = 2400, height = 900, res = 250)
-acf(res, lag.max = 36, main = paste0("ACF of residuals: seasonal AR(", sel$p, "), ", sel$seasonals, " seasonals"))
-invisible(dev.off())
 
 # ---------------------------------------------------------------------
 # 7. Robustness checks (reported in the paper; NOT used to choose the model)
