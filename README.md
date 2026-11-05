@@ -2,7 +2,9 @@
 
 A one-month-ahead forecast of euro area HICP annual inflation, made with data up to September 2026 and before Eurostat published the October figure. I wrote it for Econ 460 (Economic Forecasting) at the University of Wisconsin-Madison in fall 2026. The full report is in [`paper/report.pdf`](paper/report.pdf).
 
-**Forecast for October 2026: 4.1%**, with a 50% interval of 3.9% to 4.3% and a 90% interval of 3.5% to 4.7%. Eurostat publishes the final figure on November 18, 2026.
+**Forecast for October 2026: 4.1%**, with a 50% interval of 3.9% to 4.3% and a 90% interval of 3.5% to 4.7%.
+
+**Eurostat flash estimate (November 4, 2026): 4.0%**, inside both intervals. The final figure comes out on November 18, 2026 (see [Evaluation](#evaluation)).
 
 ![Forecast with 50% and 90% intervals](output/forecast_fan.png)
 
@@ -57,7 +59,7 @@ Eurostat, dataset `prc_hicp_minr`: euro area (changing composition), all-items H
 forecast.R          the whole analysis: data, models, selection rule, evaluation, forecast
 data/               the data used in the report
 output/             tables (.csv) and figures (.png) produced by forecast.R
-paper/              the report (PDF and LaTeX source) and its figures
+paper/              the report (PDF and LaTeX source); it also uses three figures from output/
 ```
 
 The script has seven parts: settings, data, exploration (ACF/PACF and seasonality), models and the selection rule, out-of-sample evaluation, the final forecast with intervals, residual diagnostics, and robustness checks.
@@ -68,7 +70,21 @@ The model is univariate, so it does not see energy prices, which drive much of t
 
 ## Evaluation
 
-To be added after Eurostat publishes the final October figure on November 18, 2026.
+*Preliminary, based on the flash estimate. I will update it with the final figure on November 18, 2026.*
+
+Eurostat's flash estimate puts euro area annual inflation in October 2026 at 4.0%, up from 3.8% in September. My forecast was 4.10%, so the error (actual minus forecast) is -0.1 percentage points.
+
+| | October 2026 |
+|---|---|
+| Flash estimate (Eurostat, November 4) | 4.0% |
+| My forecast | 4.10% |
+| My 50% interval | 3.86% to 4.34% |
+| My 90% interval | 3.52% to 4.68% |
+| Market consensus | 4.0% |
+
+The flash value falls inside my 50% interval. The error is about 0.3 times the standard deviation of the model's one-month errors since 2015 (0.354), so it is smaller than a typical error of the model. The model got the direction right: prices rose more this October than in October 2025, so the annual rate went up from 3.8%. The market consensus was exactly right and my forecast was one decimal too high.
+
+By component, energy prices were 20.8% higher than a year earlier (18.9% in September), services inflation was 3.3% (3.2%), food, alcohol and tobacco 1.6% and non-energy industrial goods 1.2%. My model is univariate, so I cannot compare it with these components directly. One possible reason for the small overshoot is lag 6, which carried about half of the predicted monthly increase from April 2026, a month pushed up by energy prices and Easter. With a single observation this is only a guess.
 
 ## Author
 
